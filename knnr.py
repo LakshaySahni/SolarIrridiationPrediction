@@ -1,5 +1,5 @@
 import pandas as pd
-features = pd.read_csv('temp.csv') #reads the file and saves it into features
+features = pd.read_csv('data1.csv') #reads the file and saves it into features
 print features.head(5) #initial 5 rows
 print features.shape #shape
 print features.describe()
@@ -11,7 +11,7 @@ import numpy as np #now we convert panda dataframe to numpy arrays
 from sklearn import preprocessing
 
 labels = np.array(features['GHI']) #what we want to predict, the actua values of max temp
-labels = preprocessing.scale(labels)
+#labels = preprocessing.scale(labels)
 features = features.drop('GHI',axis= 1) #now remove label from features
 #axis = 1 is a reference to the columns
 features = features.drop('DHI',axis= 1)
@@ -19,8 +19,9 @@ features = features.drop('DNI',axis= 1)
 #features = features.drop('DHI_1',axis= 1)
 #features = features.drop('DNI_1',axis= 1)
 #features = features.drop('GHI_1',axis= 1)
-#features = features.drop('Snow Depth',axis= 1)
+features = features.drop('Snow Depth',axis= 1)
 features = features.drop('Year',axis= 1)
+features = features.drop('Minute',axis= 1)
 print ('after dropping:', features.head(5))
 feature_list = list(features.columns) #to save the feature names into a list
 features = np.array(features) #convert to a nuumpy array
@@ -67,10 +68,13 @@ print('Mean Absolute Error:', round(np.mean(errors), 2), 'degrees.')
 
 # Calculate mean absolute percentage error (MAPE)
 mape = 100 * (errors / test_labels)
-#print('Mean Absolute Percentage Error: ',np.mean(mape))
+print('Mean Absolute Percentage Error: ',np.mean(mape))
 # Calculate and display accuracy
-accuracy = 100 - np.mean(mape)
+accuracy = 100 - abs(np.mean(mape))
 print('Accuracy:', round(accuracy, 2), '%.')
+
+nmae = np.sum(abs(errors))/np.sum(test_labels)
+print('nMAE',nmae) 
 
 from sklearn.metrics import mean_squared_error
 from math import sqrt

@@ -1,5 +1,5 @@
 import pandas as pd
-features = pd.read_csv('temp.csv') #reads the file and saves it into features
+features = pd.read_csv('data1.csv') #reads the file and saves it into features
 print features.head(5) #initial 5 rows
 print features.shape #shape
 print features.describe()
@@ -19,8 +19,9 @@ features = features.drop('DNI',axis= 1)
 #features = features.drop('DHI_1',axis= 1)
 #features = features.drop('DNI_1',axis= 1)
 #features = features.drop('GHI_1',axis= 1)
-#features = features.drop('Snow Depth',axis= 1)
-features = features.drop('Year',axis= 1)
+features = features.drop('Snow Depth',axis= 1)
+#features = features.drop('Year',axis= 1)
+features = features.drop('Minute',axis= 1)
 print ('after dropping:', features.head(5))
 feature_list = list(features.columns) #to save the feature names into a list
 features = np.array(features) #convert to a nuumpy array
@@ -82,3 +83,33 @@ feature_importances = sorted(feature_importances, key = lambda x: x[1], reverse 
 # Print out the feature and importances 
 for pair in feature_importances:
 	print('Variable: {:20} Importance: {}'.format(*pair))
+
+'''# Use datetime for creating date objects for plotting
+import datetime
+# Dates of training values
+months = features[:, feature_list.index('Month')]
+days = features[:, feature_list.index('Day')]
+years = features[:, feature_list.index('Year')]
+# List and then convert to datetime object
+dates = [str(int(year)) +  str(int(month)) +  str(int(day)) for year, month, day in zip(years, months, days)]
+dates = [datetime.datetime.strptime(date, '%Y-%m-%d') for date in dates]
+# Dataframe with true values and dates
+true_data = pd.DataFrame(data = {'date': dates, 'actual': labels})
+# Dates of predictions
+months = train_features[:, feature_list.index('Month')]
+days = train_features[:, feature_list.index('Day')]
+years = train_features[:, feature_list.index('Year')]
+# Column of dates
+train_dates = [str(int(year)) + '-' + str(int(month)) + '-' + str(int(day)) for year, month, day in zip(years, months, days)]
+# Convert to datetime objects
+train_dates = [datetime.datetime.strptime(date, '%Y-%m-%d') for date in test_dates]
+# Dataframe with predictions and dates
+#predictions_data = pd.DataFrame(data = {'date': train_dates, 'prediction': predictions})
+# Plot the actual values
+plt.plot(true_data['date'], true_data['actual'], 'b-', label = 'actual')
+# Plot the predicted values
+#plt.plot(predictions_data['date'], predictions_data['prediction'], 'ro', label = 'prediction')
+plt.xticks(rotation = '60'); 
+plt.legend()
+# Graph labels
+plt.xlabel('Date'); plt.ylabel('Maximum Temperature (F)'); plt.title('Actual and Predicted Values');'''
